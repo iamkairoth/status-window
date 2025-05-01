@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { Header } from '@/components/Header';
-import { StatDrawer } from '@/components/StatDrawer';
-import Experience from '@/components/Experience';
-import Project from '@/components/Project';
-import Skills from '@/components/Skills';
-import StatusEffects from '@/components/StatusEffects';
-import Storyline from '@/components/Storyline';
+import { useEffect, useState } from "react";
+import { Header } from "@/components/Header";
+import { StatDrawer } from "@/components/StatDrawer";
+import Experience from "@/components/Experience";
+import Project from "@/components/Project";
+import Skills from "@/components/Skills";
+import StatusEffects from "@/components/StatusEffects";
+import Storyline from "@/components/Storyline";
 
 interface Stat {
   name: string;
@@ -16,20 +16,44 @@ interface Stat {
 }
 
 const attributes = ["Strength", "Intelligence", "Resilience", "Creativity", "Luck", "Curiosity"];
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export default function Home() {
   const [allStats, setAllStats] = useState<Record<string, Stat>>({});
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("Home useEffect started...");
     const fetchStats = async () => {
       try {
+        const baseUrl = window.location.origin; // Should be http://localhost:3000
+        console.log("Base URL:", baseUrl);
+        console.log("Starting fetch for stats...");
+        
         const responses = await Promise.all(
-          attributes.map(attr =>
-            fetch(`${baseUrl}/stats/${attr.toLowerCase()}/`)
-              .then(res => res.json())
-              .catch(() => ({ name: attr, value: 0, breakdown: { error: "Fetch failed" } }))
-          )
+          attributes.map(async (attr) => {
+            const url = `/api/stats/${attr.toLowerCase()}`;
+            const fullUrl = `${baseUrl}${url}`;
+            console.log(`Initiating fetch for ${fullUrl}`);
+            try {
+              const res = await fetch(fullUrl, {
+                cache: "no-store",
+                credentials: "same-origin",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              console.log(`Response for ${attr}: status ${res.status} ${res.statusText}`);
+              if (!res.ok) {
+                throw new Error(`Failed to fetch ${attr}: ${res.status} ${res.statusText}`);
+              }
+              const data = await res.json();
+              console.log(`Data for ${attr}:`, data);
+              return data;
+            } catch (error) {
+              console.error(`Error fetching ${attr}:`, error);
+              return { name: attr, value: 0, breakdown: { error: `Fetch failed: ${error.message}` } };
+            }
+          })
         );
 
         const stats: Record<string, Stat> = {};
@@ -37,12 +61,20 @@ export default function Home() {
           stats[attr.toLowerCase()] = responses[idx];
         });
 
+        console.log("Fetched stats:", stats);
         setAllStats(stats);
+        setFetchError(null);
       } catch (error) {
-        console.error("Failed to fetch stats:", error);
+        console.error("Global fetch error:", error);
+        setFetchError(error.message || "Unknown fetch error");
       }
     };
-    fetchStats();
+
+    console.log("Calling fetchStats...");
+    fetchStats().catch((error) => {
+      console.error("fetchStats failed:", error);
+      setFetchError(error.message || "fetchStats failed");
+    });
   }, []);
 
   return (
@@ -55,7 +87,9 @@ export default function Home() {
               {allStats[attr.toLowerCase()] ? (
                 <StatDrawer statName={attr} statData={allStats[attr.toLowerCase()]} />
               ) : (
-                <div className="text-gray-500 text-center">Loading {attr}...</div>
+                <div className="text-gray-500 text-center">
+                  {fetchError ? `Error: ${fetchError}` : `Loading ${attr}...`}
+                </div>
               )}
             </div>
           ))}

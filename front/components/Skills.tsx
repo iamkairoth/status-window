@@ -1,19 +1,38 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose,
-} from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export default function Skills() {
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/skills/')
-      .then((res) => res.json())
-      .then((data) => setSkills(data))
-      .catch((err) => console.error('Error fetching skills:', err));
+    console.log("Fetching /api/skills");
+    fetch("/api/skills", { cache: "no-store" })
+      .then((res) => {
+        console.log("Skills response status:", res.status);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch skills: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Skills data:", data);
+        setSkills(data);
+      })
+      .catch((err) => console.error("Error fetching skills:", err));
   }, []);
 
   return (

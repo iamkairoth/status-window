@@ -556,11 +556,8 @@ const DatabaseClient = buildClient();
 const defaultOptions = {
   apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  branch: process.env.XATA_BRANCH || "main", // default to 'main' if not set
-
+  branch: process.env.XATA_BRANCH || "main",
 };
-
-
 export class XataClient extends DatabaseClient<DatabaseSchema> {
   constructor(options?: BaseClientOptions) {
     super({ ...defaultOptions, ...options }, tables);
@@ -572,15 +569,6 @@ let instance: XataClient | undefined = undefined;
 export const getXataClient = () => {
   if (instance) return instance;
 
-  const apiKey = process.env.XATA_API_KEY;
-  if (!apiKey) {
-    throw new Error("Missing XATA_API_KEY in environment variables");
-  }
-
-  instance = new XataClient({
-    apiKey,
-    databaseURL: process.env.XATA_DATABASE_URL // you can remove defaultOptions
-  });
-
+  instance = new XataClient();
   return instance;
 };

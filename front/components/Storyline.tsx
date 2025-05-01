@@ -1,19 +1,38 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose,
-} from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export default function Storyline() {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/campaigns/')
-      .then((res) => res.json())
-      .then((data) => setCampaigns(data))
-      .catch((err) => console.error('Error fetching campaigns:', err));
+    console.log("Fetching /api/campaigns");
+    fetch("/api/campaigns", { cache: "no-store" })
+      .then((res) => {
+        console.log("Campaigns response status:", res.status);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch campaigns: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Campaigns data:", data);
+        setCampaigns(data);
+      })
+      .catch((err) => console.error("Error fetching campaigns:", err));
   }, []);
 
   return (

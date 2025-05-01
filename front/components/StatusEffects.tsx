@@ -1,19 +1,38 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose,
-} from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export default function StatusEffects() {
   const [statuses, setStatuses] = useState([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/status-effects/')
-      .then((res) => res.json())
-      .then((data) => setStatuses(data))
-      .catch((err) => console.error('Error fetching status effects:', err));
+    console.log("Fetching /api/status-effects");
+    fetch("/api/status-effects", { cache: "no-store" })
+      .then((res) => {
+        console.log("StatusEffects response status:", res.status);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch status effects: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("StatusEffects data:", data);
+        setStatuses(data);
+      })
+      .catch((err) => console.error("Error fetching status effects:", err));
   }, []);
 
   return (

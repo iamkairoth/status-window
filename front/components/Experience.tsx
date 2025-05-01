@@ -1,22 +1,28 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Progress } from '@/components/ui/progress';
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+import { useState, useEffect } from "react";
+import { Progress } from "@/components/ui/progress";
 
 export default function Experience() {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
 
   useEffect(() => {
-    fetch(`${baseUrl}/experience/`)
-      .then(res => res.json())
-      .then(data => {
-        setProgress(data.progress_percentage);
+    console.log("Fetching /api/experience");
+    fetch("/api/experience", { cache: "no-store" })
+      .then((res) => {
+        console.log("Experience response status:", res.status);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch experience: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Experience data:", data);
+        setProgress(parseFloat(data.progress_percentage)); // Parse string to number
         setLevel(data.current_level);
       })
-      .catch(err => console.error('Error fetching experience:', err));
+      .catch((err) => console.error("Error fetching experience:", err));
   }, []);
 
   return (
