@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07li78k2ua5ova8un2g",
+    "operations": [
+      {
+        "add_column": {
+          "up": "''",
+          "table": "status_effects",
+          "column": {
+            "name": "attribute_affected",
+            "type": "text",
+            "comment": ""
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07li78k2ua5ova8un2g",
+  "parent": "mig_d07li20k2ua5ova8un1g",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:31:57.641251Z"
+}

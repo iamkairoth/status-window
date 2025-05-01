@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lei6o1ogctn5qn0k0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "attributes",
+          "column": {
+            "name": "baseline",
+            "type": "float",
+            "comment": "",
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lei6o1ogctn5qn0k0",
+  "parent": "mig_d07lee6o1ogctn5qn0j0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:24:08.719511Z"
+}

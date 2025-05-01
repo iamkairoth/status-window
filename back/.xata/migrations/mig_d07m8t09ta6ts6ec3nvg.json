@@ -1,0 +1,76 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07m8t09ta6ts6ec3nvg",
+    "operations": [
+      {
+        "create_table": {
+          "name": "campaigns",
+          "columns": [
+            {
+              "name": "name",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "description",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "progress",
+              "type": "integer",
+              "comment": "",
+              "nullable": true
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "campaigns_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ],
+          "comment": ""
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"campaigns\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"campaigns\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07m8t09ta6ts6ec3nvg",
+  "parent": "mig_d07m8d09ta6ts6ec3ntg",
+  "schema": "public",
+  "startedAt": "2025-04-28T11:20:21.733781Z"
+}

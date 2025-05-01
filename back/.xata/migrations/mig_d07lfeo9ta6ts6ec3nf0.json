@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lfeo9ta6ts6ec3nf0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "campaigns",
+          "column": {
+            "name": "progress",
+            "type": "float",
+            "comment": "",
+            "default": "'0'"
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lfeo9ta6ts6ec3nf0",
+  "parent": "mig_d07lf6gk2ua5ova8umpg",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:26:04.190304Z"
+}

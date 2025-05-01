@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lfm09ta6ts6ec3ng0",
+    "operations": [
+      {
+        "add_column": {
+          "up": "now()",
+          "table": "experience",
+          "column": {
+            "name": "date",
+            "type": "timestamptz",
+            "comment": ""
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lfm09ta6ts6ec3ng0",
+  "parent": "mig_d07lfeo9ta6ts6ec3nf0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:26:33.302399Z"
+}

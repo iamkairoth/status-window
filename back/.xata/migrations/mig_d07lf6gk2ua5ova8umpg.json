@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lf6gk2ua5ova8umpg",
+    "operations": [
+      {
+        "add_column": {
+          "up": "''",
+          "table": "campaigns",
+          "column": {
+            "name": "description",
+            "type": "text",
+            "comment": ""
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lf6gk2ua5ova8umpg",
+  "parent": "mig_d07leqmo1ogctn5qn0l0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:25:31.091507Z"
+}

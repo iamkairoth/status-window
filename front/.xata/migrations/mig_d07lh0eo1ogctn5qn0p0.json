@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lh0eo1ogctn5qn0p0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "projects",
+          "column": {
+            "name": "link",
+            "type": "text",
+            "comment": "",
+            "default": "'https://github.com/iamkairoth'"
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lh0eo1ogctn5qn0p0",
+  "parent": "mig_d07lgmgk2ua5ova8umrg",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:29:21.932055Z"
+}

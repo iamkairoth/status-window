@@ -1,0 +1,82 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07m8ug9ta6ts6ec3o0g",
+    "operations": [
+      {
+        "create_table": {
+          "name": "experience",
+          "columns": [
+            {
+              "name": "date",
+              "type": "timestamptz",
+              "comment": "",
+              "nullable": true
+            },
+            {
+              "name": "category",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "description",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "experience",
+              "type": "integer",
+              "comment": "",
+              "nullable": true
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "experience_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ],
+          "comment": ""
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"experience\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"experience\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07m8ug9ta6ts6ec3o0g",
+  "parent": "mig_d07m8t09ta6ts6ec3nvg",
+  "schema": "public",
+  "startedAt": "2025-04-28T11:20:26.919379Z"
+}

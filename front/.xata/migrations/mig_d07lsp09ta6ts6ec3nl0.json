@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lsp09ta6ts6ec3nl0",
+    "operations": [
+      {
+        "drop_table": {
+          "name": "campaigns"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lsp09ta6ts6ec3nl0",
+  "parent": "mig_d07lslok2ua5ova8un4g",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:54:29.648464Z"
+}

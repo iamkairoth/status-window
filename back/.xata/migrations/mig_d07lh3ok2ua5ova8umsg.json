@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lh3ok2ua5ova8umsg",
+    "operations": [
+      {
+        "add_column": {
+          "up": "''",
+          "table": "skills",
+          "column": {
+            "name": "name",
+            "type": "text",
+            "comment": ""
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lh3ok2ua5ova8umsg",
+  "parent": "mig_d07lh0eo1ogctn5qn0p0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:29:37.009841Z"
+}

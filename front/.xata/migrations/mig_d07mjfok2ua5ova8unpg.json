@@ -1,0 +1,19 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07mjfok2ua5ova8unpg",
+    "operations": [
+      {
+        "rename_table": {
+          "to": "experience_log",
+          "from": "experience"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07mjfok2ua5ova8unpg",
+  "parent": "mig_d07mjc0k2ua5ova8unog",
+  "schema": "public",
+  "startedAt": "2025-04-28T11:42:56.554452Z"
+}

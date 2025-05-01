@@ -1,0 +1,82 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07m926o1ogctn5qn0s0",
+    "operations": [
+      {
+        "create_table": {
+          "name": "skills",
+          "columns": [
+            {
+              "name": "name",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "description",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "grade",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "attribute affected",
+              "type": "text",
+              "comment": "{\"xata.type\":\"string\"}",
+              "nullable": true
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "skills_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ],
+          "comment": ""
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"skills\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"skills\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07m926o1ogctn5qn0s0",
+  "parent": "mig_d07m90mo1ogctn5qn0r0",
+  "schema": "public",
+  "startedAt": "2025-04-28T11:20:40.729794Z"
+}

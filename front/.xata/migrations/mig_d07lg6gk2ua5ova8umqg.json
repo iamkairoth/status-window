@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lg6gk2ua5ova8umqg",
+    "operations": [
+      {
+        "add_column": {
+          "up": "''",
+          "table": "experience",
+          "column": {
+            "name": "category",
+            "type": "text",
+            "comment": ""
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lg6gk2ua5ova8umqg",
+  "parent": "mig_d07lg16o1ogctn5qn0m0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:27:38.575525Z"
+}

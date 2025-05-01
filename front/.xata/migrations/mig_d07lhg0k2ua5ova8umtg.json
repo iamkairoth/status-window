@@ -1,0 +1,20 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07lhg0k2ua5ova8umtg",
+    "operations": [
+      {
+        "alter_column": {
+          "name": "grade",
+          "table": "skills",
+          "column": "string"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07lhg0k2ua5ova8umtg",
+  "parent": "mig_d07lhd09ta6ts6ec3nk0",
+  "schema": "public",
+  "startedAt": "2025-04-28T10:30:25.295625Z"
+}
