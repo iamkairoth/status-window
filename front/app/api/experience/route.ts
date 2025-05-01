@@ -1,43 +1,66 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getXataClient } from "@/lib/xata";
 
-export async function GET() {
+// GET by ID
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const xata = getXataClient();
-    const records = await xata.db.experience_log.getAll();
-    const totalExp = records.reduce((sum, item) => sum + (item.experience || 0), 0);
+    const { id } = await params; // Await params
+    const record = await xata.db.campaigns.read(id);
 
-    const expForLevel = (lvl: number) => 100 * (lvl - 1);
-    let level = 1;
-    while (totalExp >= expForLevel(level + 1)) {
-      level++;
+    if (!record) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const currentExp = expForLevel(level);
-    const nextExp = expForLevel(level + 1);
-    const progress = parseFloat(((totalExp - currentExp) / (nextExp - currentExp)) * 100).toFixed(2);
-
-    return NextResponse.json({
-      current_level: level,
-      current_experience: totalExp,
-      current_level_exp: currentExp,
-      next_level_exp: nextExp,
-      progress_percentage: progress,
-    });
-  } catch (error: any) {
-    console.error("Error fetching experience:", error);
+    return NextResponse.json(record);
+  } catch (error) {
+    console.error(`Error fetching campaign ${params}:`, error);
     return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
   }
 }
 
-export async function POST(req: Request) {
+// UPDATE by ID
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const xata = getXataClient();
-    const body = await req.json();
-    const created = await xata.db.experience_log.create(body);
-    return NextResponse.json(created);
-  } catch (error: any) {
-    console.error("Error creating experience:", error);
-    return NextResponse.json({ error: "Failed to create entry" }, { status: 500 });
+    const { id } = await params;
+    const body = await req.json(); // Consider adding type: Record<string, any>
+
+    const updated = await xata.db.campaigns.update(id, body);
+    if (!updated) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error(`Error updating campaign ${params}:`, error);
+    return NextResponse.json({ error: "Failed to update data" }, { status: 500 });
+  }
+}
+
+// DELETE by ID
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const xata = getXataClient();
+    const { id } = await params;
+    const deleted = await xata.db.campaigns.delete(id);
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Deleted" });
+  } catch (error) {
+    console.error(`Error deleting campaign ${params}:`, error);
+    return NextResponse.json({ error: "Failed to delete data" }, { status: 500 });
   }
 }

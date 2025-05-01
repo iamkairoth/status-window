@@ -15,8 +15,15 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+interface Campaign {
+  xata_id: string;
+  name: string;
+  description: string;
+  progress: number;
+}
+
 export default function Storyline() {
-  const [campaigns, setCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]); // ✅ Correctly typed
 
   useEffect(() => {
     console.log("Fetching /api/campaigns");

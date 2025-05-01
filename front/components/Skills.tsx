@@ -15,8 +15,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+interface Skill {
+  xata_id: string;
+  name: string;
+  grade: string;
+  description: string;
+  attribute_affected: string;
+  value: number;
+}
+
 export default function Skills() {
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
 
   useEffect(() => {
     console.log("Fetching /api/skills");
@@ -28,7 +37,7 @@ export default function Skills() {
         }
         return res.json();
       })
-      .then((data) => {
+      .then((data: Skill[]) => {
         console.log("Skills data:", data);
         setSkills(data);
       })
@@ -49,7 +58,9 @@ export default function Skills() {
           <div className="p-4">
             {skills.map((skill) => (
               <div key={skill.xata_id}>
-                <h2 className="font-semibold text-lg">{skill.name} ({skill.grade})</h2>
+                <h2 className="font-semibold text-lg">
+                  {skill.name} ({skill.grade})
+                </h2>
                 <p>{skill.description}</p>
                 <p className="italic">
                   {skill.attribute_affected}: {skill.value}

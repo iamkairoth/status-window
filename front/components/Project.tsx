@@ -15,8 +15,16 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  progress: number;
+  link?: string;
+}
+
 export default function Project() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     console.log("Fetching /api/projects");
@@ -28,7 +36,7 @@ export default function Project() {
         }
         return res.json();
       })
-      .then((data) => {
+      .then((data: Project[]) => {
         console.log("Projects data:", data);
         setProjects(data);
       })
@@ -53,7 +61,12 @@ export default function Project() {
                 <p>{project.description}</p>
                 <p className="font-medium">Progress: {project.progress}%</p>
                 {project.link && project.link !== "#" && (
-                  <a href={project.link} target="_blank" className="text-blue-500 underline">
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
                     View Project →
                   </a>
                 )}

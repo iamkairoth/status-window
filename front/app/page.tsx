@@ -51,7 +51,8 @@ export default function Home() {
               return data;
             } catch (error) {
               console.error(`Error fetching ${attr}:`, error);
-              return { name: attr, value: 0, breakdown: { error: `Fetch failed: ${error.message}` } };
+              const errorMessage = error instanceof Error ? error.message : "Unknown error";
+              return { name: attr, value: 0, breakdown: { error: `Fetch failed: ${errorMessage}` } };
             }
           })
         );
@@ -66,15 +67,19 @@ export default function Home() {
         setFetchError(null);
       } catch (error) {
         console.error("Global fetch error:", error);
-        setFetchError(error.message || "Unknown fetch error");
+        const errorMessage = error instanceof Error ? error.message : "Unknown fetch error";
+        setFetchError(errorMessage);
       }
+      
     };
 
     console.log("Calling fetchStats...");
     fetchStats().catch((error) => {
       console.error("fetchStats failed:", error);
-      setFetchError(error.message || "fetchStats failed");
+      const errorMessage = error instanceof Error ? error.message : "fetchStats failed";
+      setFetchError(errorMessage);
     });
+    
   }, []);
 
   return (

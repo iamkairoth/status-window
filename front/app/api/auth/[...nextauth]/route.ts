@@ -1,6 +1,8 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+
+
 
 // Example user store (replace with Xata later)
 const users = [
@@ -12,7 +14,31 @@ const users = [
   },
 ];
 
-const handler = NextAuth({
+// Define custom session and token types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      isAdmin?: boolean;
+    };
+  }
+
+  interface User {
+    id: string;
+    email: string;
+    isAdmin?: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    isAdmin?: boolean;
+    sub?: string;
+  }
+}
+
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,8 +57,10 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
-      session.user.id = token.sub;
-      session.user.isAdmin = token.isAdmin;
+      if (session.user && typeof session.user === 'object' && token.sub) {
+        session.user.id = token.sub;
+        session.user.isAdmin = token.isAdmin ?? false;
+      }
       return session;
     },
     async jwt({ token, user }) {
@@ -49,6 +77,8 @@ const handler = NextAuth({
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

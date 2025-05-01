@@ -15,8 +15,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+interface StatusEffect {
+  xata_id: string;
+  name: string;
+  grade: string;
+  description: string;
+  attribute_affected: string;
+  value: number;
+}
+
 export default function StatusEffects() {
-  const [statuses, setStatuses] = useState([]);
+  const [statuses, setStatuses] = useState<StatusEffect[]>([]); // ✅ Correctly typed
 
   useEffect(() => {
     console.log("Fetching /api/status-effects");
