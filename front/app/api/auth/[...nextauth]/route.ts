@@ -1,8 +1,16 @@
-import NextAuth, { NextAuthOptions } from "next-auth"; // No longer need DefaultSession/User imports here
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs"; // Use bcryptjs for pure JS implementation
+import bcrypt from "bcryptjs";
 
-// --- Type declarations are now handled SOLELY in types/next-auth.d.ts ---
+// --- Type declarations are handled SOLELY in types/next-auth.d.ts ---
+
+// <<< ADD THIS LOG TEMPORARILY >>>
+// This log runs when the file is initially processed.
+console.log("route.ts processing start.");
+console.log("route.ts processing. Raw ADMIN_EMAIL:", process.env.ADMIN_EMAIL); // Check if email loads
+console.log("route.ts processing. Raw ADMIN_PASSWORD_HASH:", process.env.ADMIN_PASSWORD_HASH);
+console.log("route.ts processing. Raw ADMIN_PASSWORD_HASH length:", process.env.ADMIN_PASSWORD_HASH?.length);
+// <<< END ADDED LOG >>>
 
 
 const authOptions: NextAuthOptions = {
@@ -13,12 +21,12 @@ const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
+      // --- THIS IS WHERE THE AUTHORIZE FUNCTION BELONGS ---
       async authorize(credentials) {
-        // --- Logic to get credentials from Environment Variables ---
         console.log("Authorize attempt received for email:", credentials?.email); // Log input email
 
         const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+        let adminPasswordHash = process.env.ADMIN_PASSWORD_HASH; // Use 'let'
 
         // 1. Check for missing env vars
         if (!adminEmail || !adminPasswordHash) {
@@ -26,13 +34,34 @@ const authOptions: NextAuthOptions = {
             console.log("AUTH_DEBUG: Failed - Env vars missing");
             return null;
         }
-         console.log("AUTH_DEBUG: Env vars loaded. ADMIN_EMAIL:", adminEmail, "Hash length:", adminPasswordHash.length);
+
+        // Log the loaded hash and length BEFORE any potential modification
+        console.log("AUTH_DEBUG: Env vars loaded. ADMIN_EMAIL:", adminEmail, "Hash length:", adminPasswordHash.length);
+        // Optional: Log the raw hash string itself if you want absolute certainty (be careful not to expose this in production logs)
+        // console.log("AUTH_DEBUG: Raw Loaded Hash:", adminPasswordHash);
 
 
-        // 2. Check if email matches
+        // --- WORKAROUND TEST (Revised based on '$' stripping) ---
+        // Hypothesis: All '$' signs are stripped, resulting in length 57.
+        // Prepend the standard bcrypt prefix "$2b$10$" if the loaded hash
+        // is length 57 and doesn't start with '$' (confirming stripping).
+        const expectedStrippedLength = 53; // Original hash length (60) - number of '$' signs (3)
+        const standardBcryptPrefix = '$2b$10$'; // The prefix that gets stripped
+
+        if (adminPasswordHash.length === expectedStrippedLength && !adminPasswordHash.startsWith('$')) {
+             console.warn("AUTH_DEBUG: Applying '$' stripping workaround.");
+             // Prepend the standard bcrypt prefix
+             adminPasswordHash = standardBcryptPrefix + adminPasswordHash;
+             console.log("AUTH_DEBUG: Hash after workaround:", adminPasswordHash, "New length:", adminPasswordHash.length);
+        }
+        // Note: If your hash started with $2a$ instead of $2b$, you'd adjust the prefix accordingly.
+        // --- END WORKAROUND TEST ---
+
+
         if (credentials?.email === adminEmail) {
           console.log("AUTH_DEBUG: Email matches.");
-          // 3. Compare passwords
+          // 3. Compare passwords - use the potentially modified adminPasswordHash
+          // bcrypt.compare needs the hash string starting with $2a$ or $2b$ etc.
           const passwordMatch = await bcrypt.compare(credentials?.password || "", adminPasswordHash);
 
           if (passwordMatch) {
@@ -40,10 +69,9 @@ const authOptions: NextAuthOptions = {
             // Authentication successful!
             // Return a user object. Its shape MUST match your 'User' interface defined in types/next-auth.d.ts.
             return {
-              id: "admin", // Use a fixed ID like "admin"
-              email: adminEmail, // Use the email from the environment variable
-              isAdmin: true, // Hardcode isAdmin to true for this user
-              // Include name, image etc. if they exist on DefaultUser and you need them
+              id: "admin",
+              email: adminEmail,
+              isAdmin: true,
             };
           } else {
              console.log("AUTH_DEBUG: Failed - Password mismatch.");
@@ -52,10 +80,10 @@ const authOptions: NextAuthOptions = {
             console.log("AUTH_DEBUG: Failed - Email mismatch. Provided:", credentials?.email, "Expected:", adminEmail);
         }
 
-        // If none of the above conditions returned a user, authentication failed
         console.log("AUTH_DEBUG: Final return null.");
         return null;
       },
+      // --- END OF AUTHORIZE FUNCTION ---
     }),
   ],
   callbacks: {
@@ -74,15 +102,10 @@ const authOptions: NextAuthOptions = {
            // session.user.name, email, image are usually populated by next-auth default flow
         } else {
             // Fallback if session.user isn't pre-populated (less common, depends on DefaultSession)
-            // This fallback might not be strictly necessary depending on next-auth version/config
-            // but good for safety if session.user might be undefined initially.
             session.user = {
-              id: token.id, // Use id from token
-              email: token.email || '', // Use email from token if available
-              isAdmin: token.isAdmin ?? false, // Use isAdmin from token
-              // name, image might need explicit handling if not in token
-              // name: token.name || null,
-              // image: token.picture || null, // JWT 'picture' claim
+              id: token.id,
+              email: token.email || '', // Get email from token if available
+              isAdmin: token.isAdmin ?? false,
             };
         }
       }

@@ -1,26 +1,39 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Make sure useRouter is imported
 import { useState } from "react";
 
 export default function SignInPage() {
+  const router = useRouter(); // Initialize useRouter
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
+
     const res = await signIn("credentials", {
       email,
       password,
-      redirect: true,
-      callbackUrl: "/admin",
+      // --- CHANGE THIS ---
+      redirect: false, // Don't let next-auth server handle the redirect
+      // --- END CHANGE ---
+      callbackUrl: "/admin", // Still tell next-auth where we *want* to go
     });
 
-    if (res?.error) {
-      setError("Invalid credentials");
+    // --- ADD THIS MANUAL REDIRECT LOGIC ---
+    if (res?.ok) {
+      // Authentication was successful! Manually navigate.
+      router.push("/admin");
+    } else {
+      // Authentication failed (e.g., invalid credentials handled by res.error)
+      // or an unhandled error occurred server-side before success (less likely now)
+      setError(res?.error || "An unexpected error occurred"); // Use error from res, or generic message
+      console.error("Sign in failed:", res?.error); // Log the specific error
     }
+    // --- END ADDED LOGIC ---
   };
 
   return (
@@ -46,7 +59,7 @@ export default function SignInPage() {
         />
         <button
           type="submit"
-          className="w-full bg-black text-white py-2 rounded"
+          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
         >
           Sign In
         </button>
