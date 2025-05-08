@@ -1,11 +1,20 @@
-// Get all & create new
+// app/api/experience_log/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getXataClient } from "@/lib/xata";
+import { calculateExperience } from "@/lib/calculations"; // Adjust the import path
 
 export async function GET() {
-  const xata = getXataClient();
-  const data = await xata.db.experience_log.getAll();
-  return NextResponse.json(data);
+  try {
+    const { total_experience, current_level, progress_percentage } = await calculateExperience();
+    return NextResponse.json({
+      total_experience,
+      current_level,
+      progress_percentage,
+    });
+  } catch (error) {
+    console.error("Error in GET /api/experience_log:", error);
+    return NextResponse.json({ error: "Failed to fetch experience data" }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {

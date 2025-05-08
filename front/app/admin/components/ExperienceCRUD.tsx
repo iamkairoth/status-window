@@ -21,6 +21,12 @@ export default function ExperienceCRUD() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingEntry, setEditingEntry] = useState<Experience | null>(null);
 
+  // Utility function to convert YYYY-MM-DD to RFC 3339
+  const toRFC3339 = (dateStr: string): string => {
+    if (!dateStr) return "";
+    return new Date(dateStr).toISOString(); // Converts to e.g., 2025-05-03T00:00:00.000Z
+  };
+
   const fetchData = async () => {
     try {
       const res = await fetch("/api/experience_log");
@@ -37,10 +43,17 @@ export default function ExperienceCRUD() {
 
   const handleAdd = async () => {
     if (!newEntry.category || !newEntry.date || !newEntry.description) return;
+
+    // Format the date to RFC 3339
+    const formattedEntry = {
+      ...newEntry,
+      date: toRFC3339(newEntry.date),
+    };
+
     const res = await fetch("/api/experience_log", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newEntry),
+      body: JSON.stringify(formattedEntry),
     });
     if (!res.ok) return console.error("Add failed");
     setNewEntry({ category: "", date: "", description: "", experience: 0 });
@@ -49,10 +62,17 @@ export default function ExperienceCRUD() {
 
   const handleUpdate = async () => {
     if (!selectedId || !editingEntry) return;
+
+    // Format the date to RFC 3339
+    const formattedEntry = {
+      ...editingEntry,
+      date: toRFC3339(editingEntry.date || ""),
+    };
+
     const res = await fetch(`/api/experience_log/${selectedId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editingEntry),
+      body: JSON.stringify(formattedEntry),
     });
     if (!res.ok) return console.error("Update failed");
     setSelectedId(null);

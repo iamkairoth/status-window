@@ -8,8 +8,8 @@ export default function Experience() {
   const [level, setLevel] = useState(1);
 
   useEffect(() => {
-    console.log("Fetching /api/experience");
-    fetch("/api/experience", { cache: "no-store" })
+    console.log("Fetching /api/experience_log");
+    fetch("/api/experience_log", { cache: "no-store" })
       .then((res) => {
         console.log("Experience response status:", res.status);
         if (!res.ok) {
@@ -19,7 +19,7 @@ export default function Experience() {
       })
       .then((data) => {
         console.log("Experience data:", data);
-        setProgress(parseFloat(data.progress_percentage)); // Parse string to number
+        setProgress(parseFloat(data.progress_percentage));
         setLevel(data.current_level);
       })
       .catch((err) => console.error("Error fetching experience:", err));
