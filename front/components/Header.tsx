@@ -18,9 +18,9 @@ export function Header() {
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">Level 1</h4>
             <p className="text-sm">
-              <strong>Race - </strong> Evolutionary High Human <br />
-              <strong>Class - </strong> Chaotic Developer <br />
-              <strong>Quest - </strong> Essence Restructure
+              <strong>Race - </strong> Average Human <br />
+              <strong>Class - </strong> Rebirther <br />
+              <strong>Quest - </strong> New Foundations
             </p>
             <div className="flex items-center pt-2">
               <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />

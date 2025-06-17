@@ -1,0 +1,57 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d17s0ql442djk2h91up0",
+    "operations": [
+      {
+        "create_table": {
+          "name": "poetry",
+          "columns": [
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "poetry_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ]
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"poetry\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"poetry\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d17s0ql442djk2h91up0",
+  "parent": "mig_d0kdsvm3bkbl0uadqn2g",
+  "schema": "public",
+  "startedAt": "2025-06-16T06:57:47.206689Z"
+}

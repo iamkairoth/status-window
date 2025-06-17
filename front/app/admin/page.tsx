@@ -8,6 +8,8 @@ import ProjectsCRUD from "./components/ProjectsCRUD";
 import SkillsCRUD from "./components/SkillsCRUD";
 import ExperienceCRUD from "./components/ExperienceCRUD";
 import AttributesCRUD from "./components/AttributesCRUD";
+import ArticlesCRUD from "./components/ArticlesCRUD";
+import PoetryCRUD from "./components/PoetryCRUD";
 
 const components = {
   StatusEffects: <StatusEffectsCRUD />,
@@ -16,6 +18,8 @@ const components = {
   Skills: <SkillsCRUD />,
   Experience: <ExperienceCRUD />,
   Attributes: <AttributesCRUD />,
+  Articles: <ArticlesCRUD />,
+  Poetry: <PoetryCRUD />,
 };
 
 export default function AdminPage() {

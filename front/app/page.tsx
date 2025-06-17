@@ -5,6 +5,8 @@ import { Header } from "@/components/Header";
 import { StatDrawer } from "@/components/StatDrawer";
 import Experience from "@/components/Experience";
 import Project from "@/components/Project";
+import Article from "@/components/Article";
+import Poetry from "@/components/Poetry";
 import Skills from "@/components/Skills";
 import StatusEffects from "@/components/StatusEffects";
 import Storyline from "@/components/Storyline";
@@ -85,7 +87,9 @@ export default function Home() {
   return (
     <div className="grid place-items-center min-h-screen content-center">
       <section className="container mx-auto py-10">
+        <div className="flex justify-center mb-6">
         <Header />
+        </div>
         <div className="flex flex-wrap justify-center mb-6 gap-4">
           {attributes.map((attr) => (
             <div key={attr} className="flex-1 min-w-[100px] max-w-[250px]">
@@ -104,6 +108,8 @@ export default function Home() {
         </div>
         <div className="flex gap-4 justify-center">
           <Project />
+          <Article />
+          <Poetry />
           <Skills />
           <StatusEffects />
           <Storyline />

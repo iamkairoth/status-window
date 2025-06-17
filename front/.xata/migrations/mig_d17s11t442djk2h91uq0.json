@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d17s11t442djk2h91uq0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "poetry",
+          "column": {
+            "name": "name",
+            "type": "text",
+            "comment": "",
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d17s11t442djk2h91uq0",
+  "parent": "mig_d17s0ql442djk2h91up0",
+  "schema": "public",
+  "startedAt": "2025-06-16T06:58:15.465679Z"
+}

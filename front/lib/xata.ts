@@ -8,6 +8,90 @@ import type {
 
 const tables = [
   {
+    name: "articles",
+    checkConstraints: {
+      articles_xata_id_length_xata_id: {
+        name: "articles_xata_id_length_xata_id",
+        columns: ["xata_id"],
+        definition: "CHECK ((length(xata_id) < 256))",
+      },
+    },
+    foreignKeys: {},
+    primaryKey: [],
+    uniqueConstraints: {
+      _pgroll_new_articles_xata_id_key: {
+        name: "_pgroll_new_articles_xata_id_key",
+        columns: ["xata_id"],
+      },
+    },
+    columns: [
+      {
+        name: "description",
+        type: "text",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "link",
+        type: "text",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "name",
+        type: "text",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "progress",
+        type: "int",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "xata_createdat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_id",
+        type: "text",
+        notNull: true,
+        unique: true,
+        defaultValue: "('rec_'::text || (xata_private.xid())::text)",
+        comment: "",
+      },
+      {
+        name: "xata_updatedat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_version",
+        type: "int",
+        notNull: true,
+        unique: false,
+        defaultValue: "0",
+        comment: "",
+      },
+    ],
+  },
+  {
     name: "attributes_log",
     checkConstraints: {
       attributes_xata_id_length_xata_id: {
@@ -228,6 +312,82 @@ const tables = [
       {
         name: "experience",
         type: "int",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "xata_createdat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_id",
+        type: "text",
+        notNull: true,
+        unique: true,
+        defaultValue: "('rec_'::text || (xata_private.xid())::text)",
+        comment: "",
+      },
+      {
+        name: "xata_updatedat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_version",
+        type: "int",
+        notNull: true,
+        unique: false,
+        defaultValue: "0",
+        comment: "",
+      },
+    ],
+  },
+  {
+    name: "poetry",
+    checkConstraints: {
+      poetry_xata_id_length_xata_id: {
+        name: "poetry_xata_id_length_xata_id",
+        columns: ["xata_id"],
+        definition: "CHECK ((length(xata_id) < 256))",
+      },
+    },
+    foreignKeys: {},
+    primaryKey: [],
+    uniqueConstraints: {
+      _pgroll_new_poetry_xata_id_key: {
+        name: "_pgroll_new_poetry_xata_id_key",
+        columns: ["xata_id"],
+      },
+    },
+    columns: [
+      {
+        name: "description",
+        type: "text",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "link",
+        type: "text",
+        notNull: false,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "name",
+        type: "text",
         notNull: false,
         unique: false,
         defaultValue: null,
@@ -524,6 +684,9 @@ const tables = [
 export type SchemaTables = typeof tables;
 export type InferredTypes = SchemaInference<SchemaTables>;
 
+export type Articles = InferredTypes["articles"];
+export type ArticlesRecord = Articles & XataRecord;
+
 export type AttributesLog = InferredTypes["attributes_log"];
 export type AttributesLogRecord = AttributesLog & XataRecord;
 
@@ -532,6 +695,9 @@ export type CampaignsRecord = Campaigns & XataRecord;
 
 export type ExperienceLog = InferredTypes["experience_log"];
 export type ExperienceLogRecord = ExperienceLog & XataRecord;
+
+export type Poetry = InferredTypes["poetry"];
+export type PoetryRecord = Poetry & XataRecord;
 
 export type Projects = InferredTypes["projects"];
 export type ProjectsRecord = Projects & XataRecord;
@@ -543,9 +709,11 @@ export type StatusEffects = InferredTypes["status_effects"];
 export type StatusEffectsRecord = StatusEffects & XataRecord;
 
 export type DatabaseSchema = {
+  articles: ArticlesRecord;
   attributes_log: AttributesLogRecord;
   campaigns: CampaignsRecord;
   experience_log: ExperienceLogRecord;
+  poetry: PoetryRecord;
   projects: ProjectsRecord;
   skills: SkillsRecord;
   status_effects: StatusEffectsRecord;
@@ -554,10 +722,10 @@ export type DatabaseSchema = {
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
-  apiKey: process.env.XATA_API_KEY,
-  databaseURL: process.env.XATA_DATABASE_URL,
-  branch: process.env.XATA_BRANCH || "main",
+  databaseURL:
+    "https://Kai-Roth-s-workspace-jkbg77.eu-central-1.xata.sh/db/status-window",
 };
+
 export class XataClient extends DatabaseClient<DatabaseSchema> {
   constructor(options?: BaseClientOptions) {
     super({ ...defaultOptions, ...options }, tables);

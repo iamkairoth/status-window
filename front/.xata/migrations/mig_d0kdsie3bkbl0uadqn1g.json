@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0kdsie3bkbl0uadqn1g",
+    "operations": [
+      {
+        "add_column": {
+          "table": "articles",
+          "column": {
+            "name": "description",
+            "type": "text",
+            "comment": "",
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0kdsie3bkbl0uadqn1g",
+  "parent": "mig_d0kdsed442djk2h8u1m0",
+  "schema": "public",
+  "startedAt": "2025-05-17T19:06:50.45783Z"
+}
