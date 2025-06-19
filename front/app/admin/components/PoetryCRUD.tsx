@@ -7,12 +7,11 @@ type Poetry = {
   name: string;
   description?: string;
   link?: string;
-  progress?: number;
 };
 
 export default function PoetryCRUD() {
   const [poetry, setPoetry] = useState<Poetry[]>([]);
-  const [newPoetry, setNewPoetry] = useState({ name: "", description: "", link: "", progress: 0 });
+  const [newPoetry, setNewPoetry] = useState({ name: "", description: "", link: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingPoetry, setEditingPoetry] = useState<Poetry | null>(null);
 
@@ -35,7 +34,7 @@ export default function PoetryCRUD() {
       body: JSON.stringify(newPoetry),
     });
     if (!res.ok) return console.error("Add failed");
-    setNewPoetry({ name: "", description: "", link: "", progress: 0 });
+    setNewPoetry({ name: "", description: "", link: ""});
     fetchData();
   };
 
@@ -73,7 +72,6 @@ export default function PoetryCRUD() {
                 <input className="w-full border p-2 rounded" value={editingPoetry?.name || ""} onChange={(e) => setEditingPoetry({ ...editingPoetry!, name: e.target.value })} />
                 <input className="w-full border p-2 rounded" value={editingPoetry?.description || ""} onChange={(e) => setEditingPoetry({ ...editingPoetry!, description: e.target.value })} />
                 <input className="w-full border p-2 rounded" value={editingPoetry?.link || ""} onChange={(e) => setEditingPoetry({ ...editingPoetry!, link: e.target.value })} />
-                <input type="number" className="w-full border p-2 rounded" value={editingPoetry?.progress || 0} onChange={(e) => setEditingPoetry({ ...editingPoetry!, progress: Number(e.target.value) })} />
                 <button onClick={handleUpdate} className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
               </div>
             ) : (
@@ -81,7 +79,6 @@ export default function PoetryCRUD() {
                 <strong>{poem.name}</strong>
                 <p className="text-sm">{poem.description}</p>
                 <p className="text-xs text-blue-600">Link: {poem.link}</p>
-                <p className="text-xs text-blue-600">Progress: {poem.progress}%</p>
                 <div className="flex gap-4 mt-2">
                   <button className="text-sm text-blue-500" onClick={() => { setEditingId(poem.xata_id); setEditingPoetry(poem); }}>Edit</button>
                   <button className="text-sm text-red-500" onClick={() => handleDelete(poem.xata_id)}>Delete</button>
@@ -96,7 +93,6 @@ export default function PoetryCRUD() {
         <input className="w-full p-2 border rounded" placeholder="Name" value={newPoetry.name} onChange={(e) => setNewPoetry({ ...newPoetry, name: e.target.value })} />
         <input className="w-full p-2 border rounded" placeholder="Description" value={newPoetry.description} onChange={(e) => setNewPoetry({ ...newPoetry, description: e.target.value })} />
         <input className="w-full p-2 border rounded" placeholder="Link" value={newPoetry.link} onChange={(e) => setNewPoetry({ ...newPoetry, link: e.target.value })} />
-        <input type="number" className="w-full p-2 border rounded" placeholder="Progress %" value={newPoetry.progress} onChange={(e) => setNewPoetry({ ...newPoetry, progress: Number(e.target.value) })} />
         <button onClick={handleAdd} className="w-full bg-blue-600 text-white py-2 rounded">Add Poetry</button>
       </div>
     </div>
